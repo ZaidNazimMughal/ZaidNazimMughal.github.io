@@ -13,6 +13,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
+
+    body  { @apply bg-mauve-100 }
+
         header {
     @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
 }
@@ -32,13 +35,39 @@ section h3 {
 section p {   
     @apply mb-4;
 }
+
+header h1 {
+    @apply text-6xl md:text-8xl text-mauve-600 tracking-tighter text-center mb-8 lg:mb-12;
+}
+
+section {
+    @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
+}
+
+section h2 {
+    @apply mt-8 text-3xl md:text-4xl text-mauve-500;
+}
+
+section h3 {
+    @apply mt-6 text-2xl md:text-3xl text-mauve-500;
+}
+
+section p {
+    @apply mb-4 text-base md:text-lg text-slate-700 leading-8;
+}
+a { @apply text-mauve-600 }
+
+a {
+    @apply text-blue-600 underline hover:text-red-600 hover:no-underline;
+}
+
     </style>
 
 <!-- Zaid Nazim Mughal-77306 -->
 
 </head>
 
-<body>
+<body id="top">
 
     <header>
         <h1>A Tale of Two Cities</h1>
@@ -48,7 +77,7 @@ section p {
 
 
 <section>
-          <h1>A Tale of Two Cities</h1>
+          <h2>A Tale of Two Cities</h2>
 
 <p>It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.</p>
 
@@ -64,6 +93,7 @@ section p {
 <p>A wonderful fact to reflect upon, that every human creature is constituted to be that profound secret and mystery to every other. A solemn consideration, when I enter a great city by night, that every one of those darkly clustered houses encloses its own secret; that every room in every one of them encloses its own secret; that every beating heart in the hundreds of thousands of breasts there, is, in some of its imaginings, a secret to the heart nearest it!</p>
 
 <p>by <i><b>Charles Dickens</b></i>, published by <i><b>Chapman and Hall</b></i> in 1859.</p>
+<p><a href="#top">Back to Top of page</a></p>
 <p><a href="../index.html">Back to Home page</a></p>
 
     </section>

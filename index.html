@@ -18,7 +18,7 @@
 
     <style type="text/tailwindcss">
         body {
-            @apply text-center;
+            @apply text-center bg-green-100 font-serif;
         }
 
         header {
@@ -36,6 +36,7 @@
         section {
             @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
         }
+        
 
         section h2 {
             @apply mt-8 tracking-wider;
@@ -48,6 +49,7 @@
         section p {
             @apply mb-6 text-xl md:text-2xl;
         }
+    
 
         header {
     @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
@@ -68,7 +70,26 @@ section p {
     @apply mb-4;
 }
 
+a { @apply text-green-800 }
+
+img {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 25px;
+        box-shadow: 8px 10px 8px #888;
+    }
+a {
+    @apply text-green-800 underline hover:text-red-700 hover:no-underline;
+}
     </style>
+
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicons/apple-touch-icon.png">    
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicons/favicon-32x32.png">    
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicons/favicon-16x16.png">    
+<link rel="manifest" href="../assets/img/favicons/site.webmanifest">
+
+
+
 
 <!-- Zaid Nazim Mughal-77306    -->
 
@@ -78,6 +99,7 @@ section p {
     <header>
         <h1>Hi, I'm Zaid Nazim Mughal</h1>
         <h2>Web / UI Designer</h2>
+    <img src="assets/img/developer.jpg" alt="Zaid Nazim Mughal: UI Designer"
     </header>
 
     <main>
@@ -100,6 +122,15 @@ section p {
             </p>
              <p>
                 <a href="exercises/page-5.html">Ireland's Attractions</a>
+            </p>
+            <p>
+            <a href="exercises/hero-text.html">Hero block with animated text</a>
+            </p> 
+            <p>
+            <a href="exercises/hero-image.html">Hero block with background image</a>
+            </p>
+            <p>
+            <a href="exercises/hero-video.html">Hero block with background video</a>
             </p>
         </section>
     </main>

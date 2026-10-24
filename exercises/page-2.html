@@ -13,6 +13,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
+
+    body  { @apply bg-purple-800 }
+
         header {
     @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
 }
@@ -32,20 +35,42 @@ section h3 {
 section p {   
     @apply mb-4;
 }
+
+header h1 {
+    @apply text-6xl md:text-8xl text-white tracking-tighter text-center mb-8 lg:mb-12;
+}
+
+section {
+    @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
+}
+
+section h2 {
+    @apply mt-8 text-3xl md:text-4xl text-white;
+}
+
+section p {
+    @apply mb-4 text-base md:text-lg text-white leading-9;
+}
+
+a { @apply text-white }
+
+a {
+    @apply text-blue-600 underline hover:text-red-600 hover:no-underline;
+}
+
     </style>
 
 
 <!-- Zaid Nazim Mughal-77306 -->
 
 </head>
-<body>
+<body id="top">
 
     <header>
         <h1>Purple Rain</h1>
         </header>
 <main>
     <section>
-            <h1>Purple Rain</h1>
 
     <h2>Introduction</h2>
     <p><i>Purple Rain</i> is a song by American musician Prince and his backing band The Revolution. It is the title track from the 1984 album of the same name, which in turn is the soundtrack album for the 1984 film of the same name.</p>
@@ -61,6 +86,7 @@ section p {
 
     <p><b>Source</b>: <i>Wikipedia</i>.</p>
 
+    <p><a href="#top">Back to Top of page</a></p>
     <p><a href="../index.html">Back to Home page</a></p>
 
 

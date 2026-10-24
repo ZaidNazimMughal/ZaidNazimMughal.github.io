@@ -5,13 +5,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Between 50 and 60 characters (including spaces)</title>
+  <title>Web Page with Sections</title>
   <meta name="description" content="Between 150 and 160 characters (including spaces). Like the title, this is important for search engines.">
+
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
+<link rel="manifest" href="assets/img/favicons/site.webmanifest">
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
+
+    body  { @apply font-serif text-blue-200 }
+
         header {
-    @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
+    @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%] bg-[#C8E6C9];
+}
+        header h1 {
+    @apply text-6xl md:text-8xl text-blue-800 tracking-tighter text-center mb-8 lg:mb-12;
+}
+        header h2 {
+    @apply text-2xl text-blue-800 text-center;
 }
 
         section {   
@@ -19,7 +33,7 @@
 }
 
     section h2 {   
-    @apply mt-8;
+    @apply mt-8 text-blue-800;
 }
 
 section h3 {   
@@ -29,12 +43,31 @@ section h3 {
 section p {   
     @apply mb-4;
 }
+
+
+section {
+    @apply pt-8 px-[9%] pb-[42px] md:py-[3%] md:px-[20%];
+}
+
+section h2 {
+    @apply mt-8 text-3xl md:text-4xl text-blue-800;
+}
+
+
+section p {
+    @apply mb-4 text-base md:text-lg text-blue-800;
+}
+a {
+    @apply text-blue-600 underline hover:text-red-600 hover:no-underline;
+}
     </style>
 
 
+
+<!-- Zaid Nazim Mughal-77306 -->
 </head>    
     
-<body>
+<body id="top">
 
  <!-- Navigation menu with logo -->
   <nav></nav>
@@ -48,7 +81,7 @@ section p {
 
     <!-- Main content of web page in sections -->
     <main>
-        <section>
+        <section style="background-color: #F1F8E9;">
             <h2>Smaller Heading</h2>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
 
@@ -58,14 +91,14 @@ section p {
 
         </section>
 
-        <section>
+        <section style="background-color: #E8F1F2;">
             <h2>Smaller Heading</h2>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
 
         </section>
 
-        <section>
+        <section style="background-color: #F4F0E8;">
             <h2>Smaller Heading</h2>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
 
@@ -75,7 +108,7 @@ section p {
 
         </section>
 
-        <section>
+        <section style="background-color: #EDE7F6;">
             <h2>Smaller Heading</h2>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
 
@@ -85,7 +118,7 @@ section p {
 
         </section>
 
-        <section>
+        <section style="background-color: #E3F2E8;">
             <h2>Smaller Heading</h2>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
 
@@ -95,12 +128,12 @@ section p {
 
         </section>
 
-        <section>
+        <section style="background-color: #FBE9E7;">
             <h2>Smaller Heading</h2>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima exercitationem, fuga doloribus sequi sint eveniet nobis nulla obcaecati quibusdam quae, quia aliquam mollitia ea vel ullam dolores natus in quisquam?</p>
 
-        
+        <p><a href="#top">Back to Top of page</a></p>
          <p><a href="../index.html">Back to Home page</a></p>
 
         </section>
