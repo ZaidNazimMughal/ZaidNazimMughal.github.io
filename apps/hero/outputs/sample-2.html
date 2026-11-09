@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Image</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <link rel="preload" as="image" href="assets/img/hero-image.jpg">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style type="text/tailwindcss">
+
+
+        /* Main hero container */
+        .hero {
+            @apply relative flex items-center overflow-hidden px-6 py-16;
+        }
+
+        /* Image background layer */
+        .hero-image {
+            @apply absolute inset-0 z-0;
+            background-image: url("assets/img/hero-image.jpg");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        /* Overlay layer */
+        .hero-overlay {
+            @apply absolute inset-0 z-10;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Solid overlay */
+        .hero-overlay-solid {
+            background-color: var(--overlay-color, var(--color-black));
+            background-image: none;
+        }
+
+        /* Gradient overlay */
+        .hero-overlay-gradient {
+            background-image: linear-gradient(
+                to right,
+                var(--gradient-start, var(--color-blue-500)),
+                var(--gradient-end, var(--color-blue-500))
+            );
+            background-color: transparent;
+        }
+
+        /* Content layer */
+        .hero-content {
+            @apply relative z-20 w-full;
+        }
+
+        /* Heading styles */
+        .hero h1 {
+            @apply max-w-4xl text-4xl font-bold tracking-tight leading-tight text-white text-shadow-lg/30;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+            font-family: var(--h1-font, sans-serif);
+            letter-spacing: var(--h1-spacing, 0);
+            color: var(--h1-color, var(--color-white));
+        }
+
+        .hero h2 {
+            @apply mt-6 max-w-3xl text-xl leading-relaxed text-white text-shadow-lg/30;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+            font-family: var(--h2-font, sans-serif);
+            letter-spacing: var(--h2-spacing, 0);
+            color: var(--h2-color, var(--color-white));
+        }
+
+        /* Centre alignment */
+        .hero-centre .hero-content {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .hero-centre h1,
+        .hero-centre h2 {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Minimum height */
+        .hero-min-height {
+            @apply min-h-[480px];
+        }
+
+        /* Hidden subheading */
+        .hero h2[hidden] {
+            display: none !important;
+        }
+
+        /* Tablet and desktop */
+        @media (min-width: 768px) {
+
+            .hero {
+                @apply px-12 py-20;
+            }
+
+            .hero h1 {
+                @apply text-6xl;
+            }
+
+            .hero h2 {
+                @apply text-2xl;
+            }
+
+            .hero-min-height {
+                @apply min-h-[85vh];
+            }
+        }
+
+    
+    </style>
+</head>
+
+<body>
+
+    <header class="hero hero-centre hero-min-height">
+
+        <div class="hero-image" aria-hidden="true"></div>
+
+        <div
+            class="hero-overlay hero-overlay-gradient"
+            aria-hidden="true"
+            style="opacity: 0.4; background-image: linear-gradient(to right, var(--color-black), var(--color-blue-500)); background-color: transparent;"
+        ></div>
+
+        <div class="hero-content">
+
+            <h1 style="--h1-font: sans-serif; --h1-spacing: 0px; --h1-color: var(--color-white)">Lorem ipsum dolor sit amet</h1>
+
+            <h2 style="--h2-font: sans-serif; --h2-spacing: 0px; --h2-color: var(--color-white)">Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+
+        </div>
+
+    </header>
+
+</body>
+</html>

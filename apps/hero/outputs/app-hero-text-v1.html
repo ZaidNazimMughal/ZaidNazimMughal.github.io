@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style type="text/tailwindcss">
+
+
+        /* Main hero container */
+        .hero {
+            @apply flex items-center px-6 py-16;
+        }
+
+        /* Light appearance */
+        .hero-light {
+            @apply bg-slate-50;
+        }
+
+        .hero-light h1 {
+            @apply text-slate-900;
+        }
+
+        .hero-light h2 {
+            @apply text-slate-700;
+        }
+
+        /* Dark appearance */
+        .hero-dark {
+            @apply bg-slate-900;
+        }
+
+        .hero-dark h1 {
+            @apply text-slate-50;
+        }
+
+        .hero-dark h2 {
+            @apply text-slate-300;
+        }
+
+        /* Content container */
+        .hero-content {
+            @apply w-full;
+        }
+
+        /* Main heading */
+        .hero h1 {
+            @apply max-w-4xl text-4xl font-bold tracking-tight leading-tight;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        /* Subheading */
+        .hero h2 {
+            @apply mt-6 max-w-3xl text-xl leading-relaxed;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        /* Centre alignment */
+        .hero-centre .hero-content {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .hero-centre h1,
+        .hero-centre h2 {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Minimum height */
+        .hero-min-height {
+            @apply min-h-[480px];
+        }
+
+        /* Respect the hidden property */
+        .hero h2[hidden] {
+            display: none !important;
+        }
+
+        /* Tablet and desktop adjustments (768px and above) */
+        @media (min-width: 768px) {
+
+            .hero {
+                @apply px-12 py-20;
+            }
+
+            .hero h1 {
+                @apply text-6xl;
+            }
+
+            .hero h2 {
+                @apply text-2xl;
+            }
+
+            .hero-min-height {
+                @apply min-h-[85vh];
+            }
+        }
+
+    
+    </style>
+</head>
+
+<body>
+
+    <header class="hero hero-dark hero-centre hero-min-height">
+        <div class="hero-content">
+
+            <h1>Lorem ipsum dolor sit amet</h1>
+
+            <h2>Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+
+        </div>
+    </header>
+
+</body>
+</html>

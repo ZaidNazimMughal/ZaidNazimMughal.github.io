@@ -1,0 +1,1771 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Image Generator</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <link rel="preload" as="image" href="outputs/assets/img/hero-image.jpg">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Shared Hero Styles -->
+    <style id="hero-styles" type="text/tailwindcss">
+
+        /* Main hero container */
+        .hero {
+            @apply relative flex items-center overflow-hidden px-6 py-16;
+        }
+
+        /* Image background layer */
+        .hero-image {
+            @apply absolute inset-0 z-0;
+            background-image: url("outputs/assets/img/hero-image.jpg");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        /* Overlay layer */
+        .hero-overlay {
+            @apply absolute inset-0 z-10;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Solid overlay */
+        .hero-overlay-solid {
+            background-color: var(--overlay-color, var(--color-black));
+            background-image: none;
+        }
+
+        /* Gradient overlay */
+        .hero-overlay-gradient {
+            background-image: linear-gradient(
+                to right,
+                var(--gradient-start, var(--color-blue-500)),
+                var(--gradient-end, var(--color-blue-500))
+            );
+            background-color: transparent;
+        }
+
+        /* Content layer */
+        .hero-content {
+            @apply relative z-20 w-full;
+        }
+
+        /* Heading styles */
+        .hero h1 {
+            @apply max-w-4xl text-4xl font-bold tracking-tight leading-tight text-white text-shadow-lg/30;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+            font-family: var(--h1-font, sans-serif);
+            letter-spacing: var(--h1-spacing, 0);
+            color: var(--h1-color, var(--color-white));
+        }
+
+        .hero h2 {
+            @apply mt-6 max-w-3xl text-xl leading-relaxed text-white text-shadow-lg/30;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+            font-family: var(--h2-font, sans-serif);
+            letter-spacing: var(--h2-spacing, 0);
+            color: var(--h2-color, var(--color-white));
+        }
+
+        /* Centre alignment */
+        .hero-centre .hero-content {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .hero-centre h1,
+        .hero-centre h2 {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Minimum height */
+        .hero-min-height {
+            @apply min-h-[480px];
+        }
+
+        /* Hidden subheading */
+        .hero h2[hidden] {
+            display: none !important;
+        }
+
+        /* Tablet and desktop */
+        @media (min-width: 768px) {
+
+            .hero {
+                @apply px-12 py-20;
+            }
+
+            .hero h1 {
+                @apply text-6xl;
+            }
+
+            .hero h2 {
+                @apply text-2xl;
+            }
+
+            .hero-min-height {
+                @apply min-h-[85vh];
+            }
+        }
+
+    </style>
+
+    <!-- Editor Interface Styles -->
+    <style id="editor-styles" type="text/tailwindcss">
+
+        .app-shell {
+            @apply min-h-screen bg-white text-slate-800;
+        }
+
+        .app-main {
+            @apply mx-auto max-w-6xl px-5 pt-8 pb-36;
+        }
+
+        .app-title {
+            @apply text-2xl font-bold tracking-tight;
+        }
+
+        .app-description {
+            @apply mt-2 text-sm text-slate-500;
+        }
+
+        .control-panel {
+            @apply mt-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm;
+        }
+
+        .control-heading {
+            @apply mb-3 text-sm font-semibold text-slate-700;
+        }
+
+        .control-list {
+            @apply flex flex-wrap items-center gap-x-6 gap-y-4;
+        }
+
+        .control-option {
+            @apply inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700;
+        }
+
+        .control-option input {
+            @apply size-4 cursor-pointer accent-slate-800;
+        }
+
+        .control-option input:focus-visible {
+            outline: 3px solid #3b82f6;
+            outline-offset: 4px;
+        }
+
+        .preview-section {
+            @apply mt-7;
+        }
+
+        .preview-heading {
+            @apply mb-3 text-sm font-semibold text-slate-700;
+        }
+
+        .preview-frame {
+            @apply overflow-hidden rounded-xl border border-slate-200 shadow-sm;
+        }
+
+        .instruction {
+            @apply mt-3 text-sm text-slate-500;
+        }
+
+        .editable-heading {
+            outline: none;
+            border-radius: 4px;
+            cursor: text;
+        }
+
+        .editable-heading:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 6px;
+        }
+
+        .settings-group {
+            @apply mt-5 border-t border-slate-200 pt-4;
+        }
+
+        .settings-label {
+            @apply mb-2 block text-sm font-semibold text-slate-700;
+        }
+
+        .slider-row {
+            @apply flex flex-wrap items-center gap-3;
+        }
+
+        .opacity-slider {
+            @apply w-full max-w-xs cursor-pointer accent-slate-800;
+        }
+
+        .slider-value {
+            @apply min-w-10 text-sm font-semibold tabular-nums text-slate-700;
+        }
+
+        .palette-targets {
+            @apply flex flex-wrap gap-2;
+        }
+
+        .palette-target {
+            @apply rounded-lg border border-slate-300 px-3 py-2 text-xs font-medium text-slate-700;
+        }
+
+        .palette-target[aria-pressed="true"] {
+            @apply border-slate-900 bg-slate-900 text-white;
+        }
+
+        .palette-scroll {
+            @apply mt-3 max-h-64 overflow-y-auto rounded-lg border border-slate-200 p-3;
+        }
+
+        .palette-family {
+            @apply mb-4;
+        }
+
+        .palette-family-title {
+            @apply mb-2 text-xs font-bold uppercase tracking-wide text-slate-500;
+        }
+
+        .palette-colours {
+            @apply flex flex-wrap gap-2;
+        }
+
+        .colour-swatch {
+            @apply size-9 cursor-pointer rounded-md border border-slate-300;
+        }
+
+        .colour-swatch[aria-pressed="true"] {
+            outline: 3px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        .palette-swatch:focus-visible {
+            outline: 3px solid #2563eb;
+            outline-offset: 3px;
+        }
+
+        .select-control {
+            @apply w-full max-w-xs rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm;
+        }
+
+        .copy-button {
+            @apply fixed right-5 bottom-5 z-50 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition;
+        }
+
+        .copy-button:hover {
+            @apply bg-slate-700;
+        }
+
+        .copy-button:focus-visible {
+            outline: 3px solid #3b82f6;
+            outline-offset: 4px;
+        }
+
+        .status-message {
+            @apply mt-4 text-sm font-medium text-slate-600;
+        }
+
+        .fallback-section {
+            @apply mt-5;
+        }
+
+        .fallback-label {
+            @apply mb-2 block text-sm font-semibold text-slate-700;
+        }
+
+        .fallback-textarea {
+            @apply min-h-64 w-full rounded-lg border border-slate-300 bg-slate-50 p-3 font-mono text-xs leading-relaxed;
+            resize: vertical;
+        }
+
+        .fallback-textarea:focus-visible {
+            outline: 2px solid #3b82f6;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <main class="app-main">
+
+        <header>
+            <p class="app-title">Hero Image Generator</p>
+            <p class="app-description">
+                Create a hero section with an image background and tinted overlay.
+            </p>
+        </header>
+
+        <!-- General controls -->
+        <section class="control-panel" aria-labelledby="settings-title">
+
+            <h2 id="settings-title" class="control-heading">
+                Hero Settings
+            </h2>
+
+            <div class="control-list">
+
+                <label class="control-option">
+                    <input type="checkbox" id="centreText">
+                    Centre text
+                </label>
+
+                <label class="control-option">
+                    <input type="checkbox" id="minimumHeight" checked>
+                    Minimum height
+                </label>
+
+                <label class="control-option">
+                    <input type="checkbox" id="showSubheading" checked>
+                    Show subheading
+                </label>
+
+                <label class="control-option">
+                    <input type="checkbox" id="gradientOverlay">
+                    Gradient overlay
+                </label>
+
+            </div>
+
+            <!-- Overlay opacity -->
+            <div class="settings-group">
+
+                <label class="settings-label" for="overlayOpacity">
+                    Overlay opacity
+                </label>
+
+                <div class="slider-row">
+
+                    <input
+                        type="range"
+                        id="overlayOpacity"
+                        class="opacity-slider"
+                        min="0.1"
+                        max="0.9"
+                        step="0.05"
+                        value="0.4"
+                    >
+
+                    <output id="opacityValue" class="slider-value">
+                        0.4
+                    </output>
+
+                </div>
+
+            </div>
+
+            <!-- Overlay palette targets -->
+            <div class="settings-group">
+
+                <h3 class="settings-label">Colour settings</h3>
+
+                <div class="palette-targets" id="paletteTargets">
+
+                    <button
+                        type="button"
+                        class="palette-target"
+                        data-target="overlay"
+                        aria-pressed="true"
+                    >
+                        Overlay colour
+                    </button>
+
+                    <button
+                        type="button"
+                        class="palette-target"
+                        data-target="h1"
+                        aria-pressed="false"
+                    >
+                        H1 colour
+                    </button>
+
+                    <button
+                        type="button"
+                        class="palette-target"
+                        data-target="h2"
+                        aria-pressed="false"
+                    >
+                        H2 colour
+                    </button>
+
+                </div>
+
+                <div id="gradientTargets" class="palette-targets" hidden>
+
+                    <button
+                        type="button"
+                        class="palette-target"
+                        data-target="start"
+                        aria-pressed="false"
+                    >
+                        Start colour
+                    </button>
+
+                    <button
+                        type="button"
+                        class="palette-target"
+                        data-target="end"
+                        aria-pressed="false"
+                    >
+                        End colour
+                    </button>
+
+                    <button
+                        type="button"
+                        class="palette-target"
+                        data-target="h1"
+                        aria-pressed="false"
+                    >
+                        H1 colour
+                    </button>
+
+                    <button
+                        type="button"
+                        class="palette-target"
+                        data-target="h2"
+                        aria-pressed="false"
+                    >
+                        H2 colour
+                    </button>
+
+                </div>
+
+                <!-- Gradient direction -->
+                <div id="directionSection" class="mt-4" hidden>
+
+                    <label for="gradientDirection" class="settings-label">
+                        Gradient direction
+                    </label>
+
+                    <select id="gradientDirection" class="select-control">
+
+                        <option value="to right">Left to right</option>
+                        <option value="to left">Right to left</option>
+                        <option value="to bottom">Top to bottom</option>
+                        <option value="to top">Bottom to top</option>
+
+                    </select>
+
+                </div>
+
+                <!-- Colour palette -->
+                <div id="colourPalette" class="palette-scroll" aria-label="Colour palette">
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Slate</p>
+                        <div class="palette-colours" data-family="slate"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Gray</p>
+                        <div class="palette-colours" data-family="gray"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Red</p>
+                        <div class="palette-colours" data-family="red"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Orange</p>
+                        <div class="palette-colours" data-family="orange"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Amber</p>
+                        <div class="palette-colours" data-family="amber"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Yellow</p>
+                        <div class="palette-colours" data-family="yellow"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Green</p>
+                        <div class="palette-colours" data-family="green"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Blue</p>
+                        <div class="palette-colours" data-family="blue"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Indigo</p>
+                        <div class="palette-colours" data-family="indigo"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Violet</p>
+                        <div class="palette-colours" data-family="violet"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Purple</p>
+                        <div class="palette-colours" data-family="purple"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Pink</p>
+                        <div class="palette-colours" data-family="pink"></div>
+                    </div>
+
+                    <div class="palette-family">
+                        <p class="palette-family-title">Black and White</p>
+                        <div class="palette-colours" data-family="neutral"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Typography controls -->
+            <div class="settings-group">
+
+                <h3 class="settings-label">Typography</h3>
+
+                <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+                    <div>
+                        <label for="h1Font" class="settings-label">
+                            H1 font family
+                        </label>
+
+                        <select id="h1Font" class="select-control">
+                            <option value="sans-serif">Sans serif</option>
+                            <option value="serif">Serif</option>
+                            <option value="monospace">Monospace</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                        </select>
+
+                        <label for="h1Spacing" class="settings-label mt-4">
+                            H1 letter spacing
+                        </label>
+
+                        <div class="slider-row">
+                            <input
+                                type="range"
+                                id="h1Spacing"
+                                class="opacity-slider"
+                                min="-2"
+                                max="5"
+                                step="0.5"
+                                value="0"
+                            >
+                            <output id="h1SpacingValue" class="slider-value">0px</output>
+                        </div>
+                    </div>
+
+                    <div id="h2Typography">
+
+                        <label for="h2Font" class="settings-label">
+                            H2 font family
+                        </label>
+
+                        <select id="h2Font" class="select-control">
+                            <option value="sans-serif">Sans serif</option>
+                            <option value="serif">Serif</option>
+                            <option value="monospace">Monospace</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                        </select>
+
+                        <label for="h2Spacing" class="settings-label mt-4">
+                            H2 letter spacing
+                        </label>
+
+                        <div class="slider-row">
+                            <input
+                                type="range"
+                                id="h2Spacing"
+                                class="opacity-slider"
+                                min="-2"
+                                max="5"
+                                step="0.5"
+                                value="0"
+                            >
+                            <output id="h2SpacingValue" class="slider-value">0px</output>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Live preview -->
+        <section class="preview-section">
+
+            <h2 class="preview-heading">Live Preview</h2>
+
+            <div class="preview-frame">
+
+                <header
+                    id="heroPreview"
+                    class="hero hero-min-height"
+                >
+
+                    <div
+                        class="hero-image"
+                        aria-hidden="true"
+                    ></div>
+
+                    <div
+                        id="heroOverlay"
+                        class="hero-overlay hero-overlay-solid"
+                        aria-hidden="true"
+                    ></div>
+
+                    <div class="hero-content">
+
+                        <h1
+                            id="heroHeading"
+                            class="editable-heading"
+                            contenteditable="plaintext-only"
+                            role="textbox"
+                            aria-label="Edit main hero heading"
+                            aria-multiline="true"
+                            spellcheck="true"
+                        >Lorem ipsum dolor sit amet</h1>
+
+                        <h2
+                            id="heroSubheading"
+                            class="editable-heading"
+                            contenteditable="plaintext-only"
+                            role="textbox"
+                            aria-label="Edit hero subheading"
+                            aria-multiline="true"
+                            spellcheck="true"
+                        >Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+
+                    </div>
+
+                </header>
+
+            </div>
+
+            <p class="instruction">
+                Click a heading to edit the text.
+            </p>
+
+        </section>
+
+        <!-- Copy status -->
+        <p
+            id="copyStatus"
+            class="status-message"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+        <!-- Manual copy fallback -->
+        <section
+            id="fallbackSection"
+            class="fallback-section"
+            hidden
+        >
+
+            <label for="exportedHTML" class="fallback-label">
+                Copy your HTML manually
+            </label>
+
+            <textarea
+                id="exportedHTML"
+                class="fallback-textarea"
+                readonly
+                aria-label="Generated standalone HTML code"
+            ></textarea>
+
+        </section>
+
+    </main>
+
+</div>
+
+<button
+    type="button"
+    id="copyButton"
+    class="copy-button"
+>
+    Copy HTML
+</button>
+
+
+<script>
+
+    // ==========================================
+    // 1. EXPORTED IMAGE PATH
+    // ==========================================
+
+    const exportedImagePath = "assets/img/hero-image.jpg";
+
+
+    // ==========================================
+    // 2. GET HTML ELEMENTS
+    // ==========================================
+
+    const centreTextCheckbox =
+        document.getElementById('centreText');
+
+    const minimumHeightCheckbox =
+        document.getElementById('minimumHeight');
+
+    const showSubheadingCheckbox =
+        document.getElementById('showSubheading');
+
+    const gradientOverlayCheckbox =
+        document.getElementById('gradientOverlay');
+
+    const overlayOpacitySlider =
+        document.getElementById('overlayOpacity');
+
+    const opacityValue =
+        document.getElementById('opacityValue');
+
+    const gradientDirection =
+        document.getElementById('gradientDirection');
+
+    const directionSection =
+        document.getElementById('directionSection');
+
+    const solidTargets =
+        document.getElementById('paletteTargets');
+
+    const gradientTargets =
+        document.getElementById('gradientTargets');
+
+    const colourPalette =
+        document.getElementById('colourPalette');
+
+    const heroPreview =
+        document.getElementById('heroPreview');
+
+    const heroOverlay =
+        document.getElementById('heroOverlay');
+
+    const heroHeading =
+        document.getElementById('heroHeading');
+
+    const heroSubheading =
+        document.getElementById('heroSubheading');
+
+    const h1Font =
+        document.getElementById('h1Font');
+
+    const h2Font =
+        document.getElementById('h2Font');
+
+    const h1Spacing =
+        document.getElementById('h1Spacing');
+
+    const h2Spacing =
+        document.getElementById('h2Spacing');
+
+    const h1SpacingValue =
+        document.getElementById('h1SpacingValue');
+
+    const h2SpacingValue =
+        document.getElementById('h2SpacingValue');
+
+    const h2Typography =
+        document.getElementById('h2Typography');
+
+    const copyButton =
+        document.getElementById('copyButton');
+
+    const copyStatus =
+        document.getElementById('copyStatus');
+
+    const fallbackSection =
+        document.getElementById('fallbackSection');
+
+    const exportedHTML =
+        document.getElementById('exportedHTML');
+
+    const heroStyles =
+        document.getElementById('hero-styles').textContent;
+
+
+    // ==========================================
+    // 3. SETTINGS OBJECT
+    // ==========================================
+
+    const settings = {
+
+        centreText: centreTextCheckbox.checked,
+        minimumHeight: minimumHeightCheckbox.checked,
+        showSubheading: showSubheadingCheckbox.checked,
+
+        gradientOverlay: gradientOverlayCheckbox.checked,
+
+        overlayOpacity: Number(overlayOpacitySlider.value),
+
+        activeTarget: 'overlay',
+
+        solidColour: 'black',
+        gradientStart: 'black',
+        gradientEnd: 'blue-500',
+
+        h1Colour: 'white',
+        h2Colour: 'white',
+
+        gradientDirection: gradientDirection.value,
+
+        h1Font: h1Font.value,
+        h2Font: h2Font.value,
+
+        h1Spacing: Number(h1Spacing.value),
+        h2Spacing: Number(h2Spacing.value)
+
+    };
+
+
+    // ==========================================
+    // 4. COLOUR PALETTE DATA
+    // ==========================================
+
+    const colourShades = [
+        '50', '100', '200', '300', '400',
+        '500', '600', '700', '800', '900', '950'
+    ];
+
+    const colourFamilies = [
+        'slate',
+        'gray',
+        'red',
+        'orange',
+        'amber',
+        'yellow',
+        'green',
+        'blue',
+        'indigo',
+        'violet',
+        'purple',
+        'pink'
+    ];
+
+    const paletteColours = [];
+
+    colourFamilies.forEach(function(family) {
+
+        colourShades.forEach(function(shade) {
+
+            paletteColours.push({
+                name: family + '-' + shade,
+                css: 'var(--color-' + family + '-' + shade + ')'
+            });
+
+        });
+
+    });
+
+    paletteColours.push(
+        { name: 'black', css: 'var(--color-black)' },
+        { name: 'white', css: 'var(--color-white)' }
+    );
+
+
+    // ==========================================
+    // 5. BUILD COLOUR PALETTE
+    // ==========================================
+
+    function buildColourPalette() {
+
+        const paletteGroups =
+            document.querySelectorAll('[data-family]');
+
+        paletteGroups.forEach(function(group) {
+
+            const family = group.dataset.family;
+
+            let colours = [];
+
+            if (family === 'neutral') {
+
+                colours = [
+                    { name: 'black', css: 'var(--color-black)' },
+                    { name: 'white', css: 'var(--color-white)' }
+                ];
+
+            } else {
+
+                colours = paletteColours.filter(function(colour) {
+                    return colour.name.startsWith(family + '-');
+                });
+
+            }
+
+            colours.forEach(function(colour) {
+
+                const button = document.createElement('button');
+
+                button.type = 'button';
+                button.className = 'colour-swatch palette-swatch';
+
+                button.dataset.colour = colour.name;
+
+                button.style.backgroundColor = colour.css;
+
+                button.setAttribute(
+                    'aria-label',
+                    colour.name
+                );
+
+                button.setAttribute(
+                    'aria-pressed',
+                    'false'
+                );
+
+                button.title = colour.name;
+
+                button.addEventListener('click', function() {
+
+                    selectColour(colour.name);
+
+                });
+
+                button.addEventListener('keydown', handlePaletteKeyboard);
+
+                group.appendChild(button);
+
+            });
+
+        });
+
+    }
+
+
+    // ==========================================
+    // 6. SELECT ACTIVE PALETTE TARGET
+    // ==========================================
+
+    function selectTarget(target) {
+
+        if (target === 'h2' && !settings.showSubheading) {
+            return;
+        }
+
+        settings.activeTarget = target;
+
+        updatePaletteTargets();
+        updatePaletteSelection();
+
+    }
+
+
+    function updatePaletteTargets() {
+
+        const buttons = document.querySelectorAll(
+            '[data-target]'
+        );
+
+        buttons.forEach(function(button) {
+
+            const target = button.dataset.target;
+
+            const active =
+                target === settings.activeTarget;
+
+            button.setAttribute(
+                'aria-pressed',
+                String(active)
+            );
+
+            if (target === 'h2') {
+
+                button.disabled = !settings.showSubheading;
+
+            }
+
+        });
+
+    }
+
+
+    // ==========================================
+    // 7. SELECT A COLOUR
+    // ==========================================
+
+    function selectColour(colourName) {
+
+        switch (settings.activeTarget) {
+
+            case 'overlay':
+                settings.solidColour = colourName;
+                break;
+
+            case 'start':
+                settings.gradientStart = colourName;
+                break;
+
+            case 'end':
+                settings.gradientEnd = colourName;
+                break;
+
+            case 'h1':
+                settings.h1Colour = colourName;
+                break;
+
+            case 'h2':
+                settings.h2Colour = colourName;
+                break;
+
+        }
+
+        updatePreview();
+
+    }
+
+
+    // ==========================================
+    // 8. GET CURRENT COLOUR
+    // ==========================================
+
+    function getActiveColour() {
+
+        switch (settings.activeTarget) {
+
+            case 'overlay':
+                return settings.solidColour;
+
+            case 'start':
+                return settings.gradientStart;
+
+            case 'end':
+                return settings.gradientEnd;
+
+            case 'h1':
+                return settings.h1Colour;
+
+            case 'h2':
+                return settings.h2Colour;
+
+            default:
+                return 'white';
+
+        }
+
+    }
+
+
+    // ==========================================
+    // 9. UPDATE PALETTE SELECTION
+    // ==========================================
+
+    function updatePaletteSelection() {
+
+        const currentColour = getActiveColour();
+
+        const buttons = document.querySelectorAll(
+            '.palette-swatch'
+        );
+
+        buttons.forEach(function(button) {
+
+            button.setAttribute(
+                'aria-pressed',
+                String(button.dataset.colour === currentColour)
+            );
+
+        });
+
+    }
+
+
+    // ==========================================
+    // 10. PALETTE KEYBOARD SUPPORT
+    // ==========================================
+
+    function handlePaletteKeyboard(event) {
+
+        const allowedKeys = [
+            'ArrowRight',
+            'ArrowLeft',
+            'ArrowUp',
+            'ArrowDown',
+            'Home',
+            'End'
+        ];
+
+        if (!allowedKeys.includes(event.key)) {
+            return;
+        }
+
+        const buttons = Array.from(
+            document.querySelectorAll('.palette-swatch')
+        );
+
+        const currentIndex = buttons.indexOf(event.currentTarget);
+
+        let nextIndex = currentIndex;
+
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+            nextIndex = Math.min(currentIndex + 1, buttons.length - 1);
+        }
+
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+            nextIndex = Math.max(currentIndex - 1, 0);
+        }
+
+        if (event.key === 'Home') {
+            nextIndex = 0;
+        }
+
+        if (event.key === 'End') {
+            nextIndex = buttons.length - 1;
+        }
+
+        event.preventDefault();
+
+        buttons[nextIndex].focus();
+
+    }
+
+
+    // ==========================================
+    // 11. READ SETTINGS
+    // ==========================================
+
+    function readSettings() {
+
+        settings.centreText =
+            centreTextCheckbox.checked;
+
+        settings.minimumHeight =
+            minimumHeightCheckbox.checked;
+
+        settings.showSubheading =
+            showSubheadingCheckbox.checked;
+
+        settings.gradientOverlay =
+            gradientOverlayCheckbox.checked;
+
+        settings.overlayOpacity =
+            Number(overlayOpacitySlider.value);
+
+        settings.gradientDirection =
+            gradientDirection.value;
+
+        settings.h1Font = h1Font.value;
+        settings.h2Font = h2Font.value;
+
+        settings.h1Spacing = Number(h1Spacing.value);
+        settings.h2Spacing = Number(h2Spacing.value);
+
+    }
+
+
+    // ==========================================
+    // 12. UPDATE OVERLAY
+    // ==========================================
+
+    function updateOverlay() {
+
+        heroOverlay.style.opacity =
+            settings.overlayOpacity;
+
+        if (settings.gradientOverlay) {
+
+            heroOverlay.classList.remove('hero-overlay-solid');
+            heroOverlay.classList.add('hero-overlay-gradient');
+
+            const startColour = paletteColours.find(
+                colour => colour.name === settings.gradientStart
+            );
+
+            const endColour = paletteColours.find(
+                colour => colour.name === settings.gradientEnd
+            );
+
+            heroOverlay.style.backgroundImage =
+                `linear-gradient(${settings.gradientDirection}, ${startColour.css}, ${endColour.css})`;
+
+            heroOverlay.style.backgroundColor = 'transparent';
+
+        } else {
+
+            heroOverlay.classList.remove('hero-overlay-gradient');
+            heroOverlay.classList.add('hero-overlay-solid');
+
+            const solidColour = paletteColours.find(
+                colour => colour.name === settings.solidColour
+            );
+
+            heroOverlay.style.backgroundImage = 'none';
+
+            heroOverlay.style.backgroundColor =
+                solidColour.css;
+
+        }
+
+        opacityValue.textContent =
+            settings.overlayOpacity.toFixed(2).replace(/0$/, '');
+
+    }
+
+
+    // ==========================================
+    // 13. UPDATE TYPOGRAPHY
+    // ==========================================
+
+    function updateTypography() {
+
+        heroHeading.style.setProperty(
+            '--h1-font',
+            settings.h1Font
+        );
+
+        heroSubheading.style.setProperty(
+            '--h2-font',
+            settings.h2Font
+        );
+
+        heroHeading.style.setProperty(
+            '--h1-spacing',
+            settings.h1Spacing + 'px'
+        );
+
+        heroSubheading.style.setProperty(
+            '--h2-spacing',
+            settings.h2Spacing + 'px'
+        );
+
+        heroHeading.style.setProperty(
+            '--h1-color',
+            getColourCSS(settings.h1Colour)
+        );
+
+        heroSubheading.style.setProperty(
+            '--h2-color',
+            getColourCSS(settings.h2Colour)
+        );
+
+        h1SpacingValue.textContent =
+            settings.h1Spacing + 'px';
+
+        h2SpacingValue.textContent =
+            settings.h2Spacing + 'px';
+
+    }
+
+
+    // ==========================================
+    // 14. GET CSS COLOUR
+    // ==========================================
+
+    function getColourCSS(colourName) {
+
+        const colour = paletteColours.find(
+            item => item.name === colourName
+        );
+
+        return colour ? colour.css : 'var(--color-white)';
+
+    }
+
+
+    // ==========================================
+    // 15. UPDATE PALETTE MODE
+    // ==========================================
+
+    function updatePaletteMode() {
+
+        if (settings.gradientOverlay) {
+
+            solidTargets.hidden = true;
+            gradientTargets.hidden = false;
+            directionSection.hidden = false;
+
+            if (
+                settings.activeTarget === 'overlay' ||
+                settings.activeTarget === 'h2' && !settings.showSubheading
+            ) {
+                settings.activeTarget = 'start';
+            }
+
+        } else {
+
+            solidTargets.hidden = false;
+            gradientTargets.hidden = true;
+            directionSection.hidden = true;
+
+            if (
+                settings.activeTarget === 'start' ||
+                settings.activeTarget === 'end' ||
+                settings.activeTarget === 'h2' && !settings.showSubheading
+            ) {
+                settings.activeTarget = 'overlay';
+            }
+
+        }
+
+        updatePaletteTargets();
+        updatePaletteSelection();
+
+    }
+
+
+    // ==========================================
+    // 16. UPDATE PREVIEW
+    // ==========================================
+
+    function updatePreview() {
+
+        readSettings();
+
+        heroPreview.classList.toggle(
+            'hero-centre',
+            settings.centreText
+        );
+
+        heroPreview.classList.toggle(
+            'hero-min-height',
+            settings.minimumHeight
+        );
+
+        heroSubheading.hidden =
+            !settings.showSubheading;
+
+        h2Typography.hidden =
+            !settings.showSubheading;
+
+        updatePaletteMode();
+        updateOverlay();
+        updateTypography();
+
+        updateExportTextarea();
+
+    }
+
+
+    // ==========================================
+    // 17. ESCAPE HTML TEXT
+    // ==========================================
+
+    function escapeHTML(text) {
+
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+    }
+
+
+    // ==========================================
+    // 18. BUILD EXPORTED HERO CSS
+    // ==========================================
+
+    function buildExportStyles() {
+
+        let css = heroStyles;
+
+        css = css.replace(
+            'outputs/assets/img/hero-image.jpg',
+            exportedImagePath
+        );
+
+        return css;
+
+    }
+
+
+    // ==========================================
+    // 19. BUILD STANDALONE HTML
+    // ==========================================
+
+    function buildExportHTML() {
+
+        readSettings();
+
+        const headingText =
+            escapeHTML(heroHeading.textContent);
+
+        const subheadingText =
+            escapeHTML(heroSubheading.textContent);
+
+        const heroClasses = [
+            'hero',
+            settings.centreText ? 'hero-centre' : '',
+            settings.minimumHeight ? 'hero-min-height' : ''
+        ].filter(Boolean).join(' ');
+
+        const overlayClass = settings.gradientOverlay
+            ? 'hero-overlay hero-overlay-gradient'
+            : 'hero-overlay hero-overlay-solid';
+
+        const overlayStyle = settings.gradientOverlay
+            ? `opacity: ${settings.overlayOpacity}; background-image: linear-gradient(${settings.gradientDirection}, ${getColourCSS(settings.gradientStart)}, ${getColourCSS(settings.gradientEnd)}); background-color: transparent;`
+            : `opacity: ${settings.overlayOpacity}; background-color: ${getColourCSS(settings.solidColour)}; background-image: none;`;
+
+        const h1Style = [
+            `--h1-font: ${settings.h1Font}`,
+            `--h1-spacing: ${settings.h1Spacing}px`,
+            `--h1-color: ${getColourCSS(settings.h1Colour)}`
+        ].join('; ');
+
+        const h2Style = [
+            `--h2-font: ${settings.h2Font}`,
+            `--h2-spacing: ${settings.h2Spacing}px`,
+            `--h2-color: ${getColourCSS(settings.h2Colour)}`
+        ].join('; ');
+
+        let subheadingHTML = '';
+
+        if (settings.showSubheading) {
+
+            subheadingHTML =
+                `<h2 style="${h2Style}">${subheadingText}</h2>`;
+
+        }
+
+        const completeHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Image</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <link rel="preload" as="image" href="${exportedImagePath}">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>
+
+    <style type="text/tailwindcss">
+${buildExportStyles()}
+    </style>
+</head>
+
+<body>
+
+    <header class="${heroClasses}">
+
+        <div class="hero-image" aria-hidden="true"></div>
+
+        <div
+            class="${overlayClass}"
+            aria-hidden="true"
+            style="${overlayStyle}"
+        ></div>
+
+        <div class="hero-content">
+
+            <h1 style="${h1Style}">${headingText}</h1>
+
+            ${subheadingHTML}
+
+        </div>
+
+    </header>
+
+</body>
+</html>`;
+
+        return completeHTML;
+
+    }
+
+
+    // ==========================================
+    // 20. UPDATE MANUAL COPY TEXTAREA
+    // ==========================================
+
+    function updateExportTextarea() {
+
+        exportedHTML.value = buildExportHTML();
+
+    }
+
+
+    // ==========================================
+    // 21. INSERT PLAIN TEXT AT CURSOR
+    // ==========================================
+
+    function insertPlainTextAtCursor(element, text) {
+
+        const selection = window.getSelection();
+
+        if (!selection || selection.rangeCount === 0) {
+
+            element.appendChild(
+                document.createTextNode(text)
+            );
+
+            return;
+
+        }
+
+        const range = selection.getRangeAt(0);
+
+        if (!element.contains(range.commonAncestorContainer)) {
+
+            element.appendChild(
+                document.createTextNode(text)
+            );
+
+            return;
+
+        }
+
+        range.deleteContents();
+
+        const textNode =
+            document.createTextNode(text);
+
+        range.insertNode(textNode);
+
+        range.setStartAfter(textNode);
+        range.collapse(true);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+    }
+
+
+    // ==========================================
+    // 22. HANDLE PLAIN TEXT PASTE
+    // ==========================================
+
+    function handlePlainTextPaste(event) {
+
+        event.preventDefault();
+
+        const pastedText =
+            event.clipboardData.getData('text/plain');
+
+        insertPlainTextAtCursor(
+            event.currentTarget,
+            pastedText
+        );
+
+    }
+
+
+    // ==========================================
+    // 23. HANDLE HEADING KEYBOARD INPUT
+    // ==========================================
+
+    function handleHeadingKeydown(event) {
+
+        if (event.key === 'Enter') {
+
+            event.preventDefault();
+
+            insertPlainTextAtCursor(
+                event.currentTarget,
+                '\n'
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // 24. COPY HTML
+    // ==========================================
+
+    async function copyHTML() {
+
+        const htmlToCopy = buildExportHTML();
+
+        exportedHTML.value = htmlToCopy;
+
+        try {
+
+            if (
+                !navigator.clipboard ||
+                !navigator.clipboard.writeText
+            ) {
+
+                throw new Error('Clipboard unavailable');
+
+            }
+
+            await navigator.clipboard.writeText(htmlToCopy);
+
+            copyStatus.textContent =
+                'HTML copied—paste it into VS Code.';
+
+            fallbackSection.hidden = true;
+
+        }
+
+        catch (error) {
+
+            copyStatus.textContent =
+                'Automatic copying is unavailable. Copy the HTML from the box below.';
+
+            fallbackSection.hidden = false;
+
+            exportedHTML.focus();
+            exportedHTML.select();
+
+        }
+
+    }
+
+
+    // ==========================================
+    // 25. UPDATE GRADIENT MODE
+    // ==========================================
+
+    gradientOverlayCheckbox.addEventListener(
+        'change',
+        function() {
+
+            updatePreview();
+
+        }
+    );
+
+
+    // ==========================================
+    // 26. CONNECT PALETTE TARGET BUTTONS
+    // ==========================================
+
+    document.querySelectorAll('[data-target]').forEach(
+        function(button) {
+
+            button.addEventListener('click', function() {
+
+                selectTarget(button.dataset.target);
+
+            });
+
+        }
+    );
+
+
+    // ==========================================
+    // 27. CONNECT CHECKBOXES
+    // ==========================================
+
+    centreTextCheckbox.addEventListener(
+        'change',
+        updatePreview
+    );
+
+    minimumHeightCheckbox.addEventListener(
+        'change',
+        updatePreview
+    );
+
+    showSubheadingCheckbox.addEventListener(
+        'change',
+        updatePreview
+    );
+
+
+    // ==========================================
+    // 28. CONNECT OVERLAY SLIDER
+    // ==========================================
+
+    overlayOpacitySlider.addEventListener(
+        'input',
+        updatePreview
+    );
+
+
+    // ==========================================
+    // 29. CONNECT GRADIENT DIRECTION
+    // ==========================================
+
+    gradientDirection.addEventListener(
+        'change',
+        updatePreview
+    );
+
+
+    // ==========================================
+    // 30. CONNECT TYPOGRAPHY CONTROLS
+    // ==========================================
+
+    h1Font.addEventListener('change', updatePreview);
+    h2Font.addEventListener('change', updatePreview);
+
+    h1Spacing.addEventListener('input', updatePreview);
+    h2Spacing.addEventListener('input', updatePreview);
+
+
+    // ==========================================
+    // 31. CONNECT HEADING EDITING
+    // ==========================================
+
+    const editableHeadings = [
+        heroHeading,
+        heroSubheading
+    ];
+
+    editableHeadings.forEach(function(heading) {
+
+        heading.addEventListener(
+            'input',
+            updateExportTextarea
+        );
+
+        heading.addEventListener(
+            'paste',
+            handlePlainTextPaste
+        );
+
+        heading.addEventListener(
+            'keydown',
+            handleHeadingKeydown
+        );
+
+    });
+
+
+    // ==========================================
+    // 32. CONNECT COPY BUTTON
+    // ==========================================
+
+    copyButton.addEventListener(
+        'click',
+        copyHTML
+    );
+
+
+    // ==========================================
+    // 33. INITIALISE APPLICATION
+    // ==========================================
+
+    buildColourPalette();
+
+    updatePreview();
+
+</script>
+
+</body>
+</html>
